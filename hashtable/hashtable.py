@@ -22,6 +22,7 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
+        self.capacity = [None] * 10
 
 
     def get_num_slots(self):
@@ -54,6 +55,17 @@ class HashTable:
         """
 
         # Your code here
+        FNV_offset_basis = 14695981039346656037
+        FNV_prime = 1099511628211
+
+        hashed_var = FNV_offset_basis
+
+        string_bytes = s.encode()
+
+        for b in string_bytes:
+            hashed_var = hashed_var * FNV_prime
+            hashed_var = hashed_var ^ b
+        return hashed_var
 
 
     def djb2(self, key):
@@ -63,6 +75,10 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for i in key:
+            hash = (hash * 33) + ord(i)
+        return hash
 
 
     def hash_index(self, key):
@@ -82,6 +98,11 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        hashed_key = self.djb2(key)
+
+        idx = hashed_key % 10
+
+        self.capacity[idx] = value
 
 
     def delete(self, key):
@@ -93,6 +114,11 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        hashed_key = self.djb2(key)
+
+        idx = hashed_key % 10
+
+        self.capacity[idx] = None
 
 
     def get(self, key):
@@ -104,6 +130,12 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        hashed_key = self.djb2(key)
+
+        idx = hashed_key % 10
+
+        value = self.capacity[idx]
+        return value
 
 
     def resize(self, new_capacity):
